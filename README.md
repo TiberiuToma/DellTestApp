@@ -75,6 +75,8 @@ I. Add Customer Request :
 </ApplicationData>
 </E2ETraceEvent>
 
+
+
 I. Add Customer Response :
 
 <E2ETraceEvent xmlns="http://schemas.microsoft.com/2004/06/E2ETraceEvent">
@@ -112,6 +114,8 @@ I. Add Customer Response :
 </TraceData>
 </ApplicationData>
 </E2ETraceEvent>
+
+
 
 II. Check if the email already exists in the DB request :
 
