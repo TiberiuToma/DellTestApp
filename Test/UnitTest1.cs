@@ -13,7 +13,8 @@ namespace TheServiceUnitTests
         {
             var service1 = new Service1();
             // using a new email every time
-            var result = service1.AddCustomer(new Customer { Fname = "Andrew", Lname = "Steve", Email = "andrew2.steve@gmail.com" });
+            // will always return 1
+            var result = service1.AddCustomer(new Customer { Fname = "Andrew", Lname = "Steve", Email = "andrew5.steve@gmail.com" });
 
             Trace.Assert(result == 1);
         }
@@ -22,18 +23,20 @@ namespace TheServiceUnitTests
         public void AddCustomer_InsertCustomerInDb_ResultFail()
         {
             var service1 = new Service1();
-            //using an email that already exists
+            // using an email that already exists
+            // will always fail because of the 'UNIQUE' attribute on 'email' column
             var result = service1.AddCustomer(new Customer { Fname = "Andrew", Lname = "Steve", Email = "andrew.steve@gmail.com" });
 
-            Trace.Assert(result == 1);
+            Trace.Assert(result == 0);
         }
 
         [TestMethod]
         public void UpdateCustomer_UpdateCustomerInDb_ResultOK()
         {
             var service1 = new Service1();
-            // using a new email every time
-            var result = service1.AddCustomer(new Customer { Fname = "Lenka", Lname = "Steve", Email = "andrew2.steve@gmail.com" });
+            // using an email that already exists
+            // should always return 1
+            var result = service1.UpdateCustomer(new Customer { Fname = "Lenka", Lname = "John", Email = "andrew2.steve@gmail.com" });
 
             Trace.Assert(result == 1);
         }
@@ -43,16 +46,17 @@ namespace TheServiceUnitTests
         {
             var service1 = new Service1();
             // using a new email every time
-            var result = service1.AddCustomer(new Customer { Fname = "Lenka", Lname = "Steve", Email = "andrew4.steve@gmail.com" });
+            // should always return 0 
+            var result = service1.UpdateCustomer(new Customer { Fname = "Lenka", Lname = "Steve", Email = "andrew3.steve@gmail.com" });
 
-            Trace.Assert(result == 1);
+            Trace.Assert(result == 0);
         }
 
         [TestMethod]
         public void ReturnId_GetCustomerID_ResultOK()
         {
             var service1 = new Service1();
-            // using a new email every time
+            // if we use an email that exists we should get the value of "CustomerID" column
             var result = service1.ReturnId("andrew.steve@gmail.com");
 
             Trace.Assert(result == 13);
@@ -62,27 +66,30 @@ namespace TheServiceUnitTests
         public void ReturnId_GetCustomerID_ResultFail()
         {
             var service1 = new Service1();
-            // using a new email every time
+            // using an email that doesn't exist will always fail
+            // this function should be called only after we make sure that the customer exists
             var result = service1.ReturnId("andrew3.steve@gmail.com");
 
-            Trace.Assert(result == 13);
+            Trace.Assert(result == 0);
         }
 
         [TestMethod]
         public void AlreadyExists_CheckIfCustomerExists_ResultTrue()
         {
             var service1 = new Service1();
-            // using a new email every time
+            // if the return value is 1 (because of the restraint on the column 'email' it can only be 1 or 0)
+            // it means that the email already exists
             var result = service1.AlreadyExists("andrew2.steve@gmail.com");
 
-            Trace.Assert(result>0);
+            Trace.Assert(result==1);
         }
 
         [TestMethod]
         public void AlreadyExists_CheckIfCustomerExists_ResultFalse()
         {
             var service1 = new Service1();
-            // using a new email every time
+            // if the email already exists the return value should be 0
+            // if the test is a success it means that the entered email already exists
             var result = service1.AlreadyExists("andrew3.steve@gmail.com");
 
             Trace.Assert(result == 0);
